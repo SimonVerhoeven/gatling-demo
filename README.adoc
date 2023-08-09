@@ -1,0 +1,13 @@
+= Gatling - demo
+:toc:
+:toc-placement:
+
+== What is Gatling?
+
+It is a performance load-testing tool that easily allows us to simulate traffic, and perform load testing as code, so we can integrate it with CI/CD and automation.
+
+We can make use of the https://gatling.io/docs/gatling/tutorials/quickstart/#using-the-recorder[Recorder] to record a scenario or write our own using the Java/Scala DSL.
+
+
+== References
+* https://gatling.io/[Gatling official website]
