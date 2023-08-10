@@ -8,6 +8,28 @@ It is a performance load-testing tool that easily allows us to simulate traffic,
 
 We can make use of the https://gatling.io/docs/gatling/tutorials/quickstart/#using-the-recorder[Recorder] to record a scenario or write our own using the Java/Scala DSL.
 
+== Basics
+
+Gattling has a couple of core concepts we should know:
+
+* Virtual user: a dummy user implemented by Gattling as a message
+* Session: each virtual user has a Session that act as placeholders which can be used to inject, or capture & store data.
+* Scenario: the steps our virtual user has to perform
+* Simulation: the definition of the test such as the number of users, HTTP protocol, acceptance criteria, hooks, throughput sharing, ...
+* Recorder: the UI we can use to record a Scenario and output a Simulation
+* Feeders: the API we use to inject data from external sources into the virtual user's session
+* Checks: a response processor so that we can verify certain conditions, and optionally capture some information to store in the Session for later reuse
+* Assertions: used to define acceptance criteria
+
+Also keep in mind that in Gatling the default unit for Duration parameters is 1 second.
+
+== Executing the sample
+
+Once the application is running we can use `mvn gatling:test` or `gradle gatlingRun` to perform our simulation.
+
+During the execution Gatling will output the progress of the current Simulation to the console, and at the end of each Simulation a summary of it.
+
+After the execution we will find our report in `target` or `build` respectively.
 
 == References
 * https://gatling.io/[Gatling official website]
