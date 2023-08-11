@@ -10,9 +10,9 @@ We can make use of the https://gatling.io/docs/gatling/tutorials/quickstart/#usi
 
 == Basics
 
-Gattling has a couple of core concepts we should know:
+Gatling has a couple of core concepts we should know:
 
-* Virtual user: a dummy user implemented by Gattling as a message
+* Virtual user: a dummy user implemented by Gatling as a message
 * Session: each virtual user has a Session that act as placeholders which can be used to inject, or capture & store data.
 * Scenario: the steps our virtual user has to perform
 * Simulation: the definition of the test such as the number of users, HTTP protocol, acceptance criteria, hooks, throughput sharing, ...
@@ -23,13 +23,66 @@ Gattling has a couple of core concepts we should know:
 
 Also keep in mind that in Gatling the default unit for Duration parameters is 1 second.
 
+== Basic setup
+
+A basic tests can consist of three steps
+
+=== 1) The protocol
+
+[code,java]
+----
+final HttpProtocolBuilder httpProtocol = http
+    .baseUrl("http://localhost:8080")
+    .acceptHeader("application/json")
+    .userAgentHeader("Gatling performance Test");
+----
+
+This is the base configuration we'll be using for our API. +
+_note: Gatling also supports JMS & MQTT_
+
+=== 2) The scenario
+
+[code,java]
+----
+ScenarioBuilder scenario = CoreDsl.scenario("Load Test greeting")
+    .exec(http("get greeting")
+            .get(session -> "/greet/" + UUID.randomUUID())
+            .check(status().is(200))
+    )
+    .pause(5)
+    .exec(http("Randomly slow")
+            .get("/slow")
+            .check(status().is(200))
+    );
+----
+
+The scenario that we'll be executing. +
+In this case we're invoking the greeting call, verifying that it's returning OK, waiting 5 seconds, invoking another endpoint and checking that ones status.
+
+=== 3) The simulation
+
+[code,java]
+----
+public GreetingSimulation() {
+    this.setUp(scenario.injectOpen(constantUsersPerSec(100).during(Duration.ofSeconds(60))))
+            .protocols(httpProtocol);
+}
+----
+
+The simulation ties it all together. We set up our performance test for our given scenario, and define the amount of users and the duration of the test using the given protocol.
+
+
 == Executing the sample
 
 Once the application is running we can use `mvn gatling:test` or `gradle gatlingRun` to perform our simulation.
 
 During the execution Gatling will output the progress of the current Simulation to the console, and at the end of each Simulation a summary of it.
 
-After the execution we will find our report in `target` or `build` respectively.
+After the execution we will find our report in `target` or `build` respectively. +
+And we might end up with a report like this:
+
+image::raw/result.png[]
 
 == References
 * https://gatling.io/[Gatling official website]
+* https://computer-database.gatling.io/computers[Gatling sample application] - this application is provided by Gatling to be targeted by the recorder
