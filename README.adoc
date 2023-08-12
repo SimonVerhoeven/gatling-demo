@@ -25,7 +25,7 @@ Also keep in mind that in Gatling the default unit for Duration parameters is 1 
 
 == Basic setup
 
-A basic tests can consist of three steps
+A basic tests can consist of these three components
 
 === 1) The protocol
 
@@ -71,10 +71,109 @@ public GreetingSimulation() {
 
 The simulation ties it all together. We set up our performance test for our given scenario, and define the amount of users and the duration of the test using the given protocol.
 
+== Using the recorder
 
-== Executing the sample
+Once you've downloaded the recorder https://gatling.io/open-source/[from the website] you can start the Gatling recorder using the `recorder.sh` or `recorder.bat` within `$GATLING_HOME/bin/`
 
-Once the application is running we can use `mvn gatling:test` or `gradle gatlingRun` to perform our simulation.
+For this example we'll be making use of the https://computer-database.gatling.io/computers[Gatling sample application]
+
+We start of by configuring the recorder
+
+image::raw/recorder.png[]
+
+And we configure the following settings
+
+. proxy => HTTP proxy
+. package => our desired package name
+. class name => the simulation name
+. format => Java 17
+. settings => we follow redirects, infer HTML resources, enable automatic references and remove cache headers
+. deny list => we click no static resources
+
+Then we need to configure our proxy so that we can record the scenario:
+
+image::raw/proxy.png[]
+
+After this we can `start` our recording
+
+For example let us:
+
+* navigate to the site
+* look up on `ACE`
+* select the first result
+* mark it as belonging to the first company
+* save
+* opt to create a new computer
+* name it Sampler and save
+
+And then hit `Save` in the recorder
+
+And we'd end up with a recording akin to this link:raw/RecordedComputerSimulation.java[Sample recording].
+
+=== Running the recording
+
+==== Using the commandline tool
+
+We can run the recording by using `gatling.sh` or `gatling.bat` within `$GATLING_HOME/bin/`
+
+We'll be prompted for:
+
+* whether to run locally/gatling cloud/package => we'll run it locally
+* an optional description
+
+After the run it will show us where we can find the simulation results
+
+=== Using a build tool
+
+=== General configuration
+
+We can set up a `gatling.conf` file in `src\test\resources` to define global parameters such as the used encoding, SSL setup, shutdownTimeout, ... +
+To view a list of possible parameters, and their defaults you can visit https://github.com/gatling/gatling/blob/main/gatling-core/src/main/resources/gatling-defaults.conf[their github repository].
+
+==== Maven project
+
+We need to add:
+
+[code,xml]
+----
+<dependencies>
+  <dependency>
+    <groupId>io.gatling.highcharts</groupId>
+    <artifactId>gatling-charts-highcharts</artifactId>
+    <version>3.9.5</version>
+    <scope>test</scope>
+  </dependency>
+</dependencies>
+
+<plugin>
+  <groupId>io.gatling</groupId>
+  <artifactId>gatling-maven-plugin</artifactId>
+  <version>4.4.0</version>
+</plugin>
+----
+
+*note:* If your scenario was written/recorded as Scala you will need to use the `scala-maven-plugin`!
+
+=== Gradle project
+
+There are a couple of things we need to keep in mind:
+
+* we'll need to be using at least Gradle 5
+* in case of a multi-project build we should only add it to those containing Gatling simulations
+* our simulations are expected to be located in: `src/gatling/{java|kotlin|scala}`
+
+We'll need to add the following to our build file:
+
+[code,groovy]
+----
+ plugins {
+   id 'io.gatling.gradle' version "MANUALLY_REPLACE_WITH_LATEST_VERSION"
+ }
+----
+
+=== Execution
+
+We can use `mvn gatling:test` or `gradle gatlingRun` to perform our simulation.
 
 During the execution Gatling will output the progress of the current Simulation to the console, and at the end of each Simulation a summary of it.
 
@@ -82,6 +181,11 @@ After the execution we will find our report in `target` or `build` respectively.
 And we might end up with a report like this:
 
 image::raw/result.png[]
+
+== Notes
+* Gatling as a standalone bundle can be used for Scala and Java, for Kotlin you'll need a `Maven` or `Gradle` project.
+
+* Gatling requires Java 8 or higher
 
 == References
 * https://gatling.io/[Gatling official website]
