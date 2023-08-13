@@ -58,6 +58,7 @@ ScenarioBuilder scenario = CoreDsl.scenario("Load Test greeting")
 
 The scenario that we'll be executing. +
 In this case we're invoking the greeting call, verifying that it's returning OK, waiting 5 seconds, invoking another endpoint and checking that ones status.
+*note*: we are also giving out chain a label to make it easily identifiable in the output.
 
 === 3) The simulation
 
@@ -182,6 +183,48 @@ After the execution we will find our report in `target` or `build` respectively.
 And we might end up with a report like this:
 
 image::raw/result.png[]
+
+== Diving a bit deeper
+
+=== Splitting up our scenario
+
+Now we have one big Simulation, now ideally we'd like to split this up so that we can reuse parts and make it more maintaineable in case the application under test changes.
+
+We can achieve this by making use of `ChainBuilder`. Each portion would be a chain in our Scenario link.
+
+So we can go from:
+
+[code,java]
+----
+ScenarioBuilder sampleScenario = scenario("Load Test greeting")
+    .exec(http("get greeting")
+            .get(session -> "/greet/" + UUID.randomUUID())
+            .check(status().is(200))
+    )
+    .pause(5)
+    .exec(http("Randomly slow")
+            .get("/slow")
+            .check(status().is(200))
+    );
+----
+
+to
+
+[code,java]
+----
+ChainBuilder greeting = exec(http("get greeting")
+        .get(session -> "/greet/" + UUID.randomUUID())
+        .check(status().is(200))
+)
+        .pause(5);
+
+ChainBuilder slowcall = exec(http("Randomly slow")
+        .get("/slow")
+        .check(status().is(200))
+);
+
+ScenarioBuilder sampleScenario2 = scenario("Loead test greeting").exec(greeting, slowcall);
+----
 
 == Notes
 * Gatling as a standalone bundle can be used for Scala and Java, for Kotlin you'll need a `Maven` or `Gradle` project.
