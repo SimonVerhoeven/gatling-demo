@@ -273,7 +273,7 @@ this API allows us to define things such as:
 * constant number of users per second during a certain time
 * ...
 
-For example we could have this setup:
+For example, we could have this setup:
 [code,java]
 ----
 sampleScenario.injectOpen(
@@ -287,9 +287,66 @@ This allows us to mimic behaviours like call centers/morning rush/...
 
 A full list of details can be found on the https://gatling.io/docs/gatling/reference/current/core/injection/[injection] page.
 
+=== Data setup
+
+For some realistic tests we of course want to set up some data, rather than the static data from the recorder.
+We will inject this data into our virtual users, and later retrieve it.
+
+==== Setting data
+
+We have three options:
+
+1) by extracting it from responses, and saving it such as:
+
+[code,java]
+----
+.check(status().is(200).saveAs("Status"))
+----
+
+2) using the `Session` API
+[code,java]
+----
+ChainBuilder sessionStep = exec(session -> {
+    return session.set("someField", "value");
+});
+----
+*note*: keep in mind `Session` instances are immutable!
+
+3) Using feeders
+
+A feeder is an alias for `Iterator<Map<String, T>>` so the created component will poll `Map<String, T>` to inject into the context.
+
+Gatling offers us quite a lot of feeders such as:
+
+* CSV
+* JSON
+* JDBC
+* Redis
+* ...
+
+With multiple `Strategies` (`queue`, | `random` | `shuffle` | `circular`) on how to treat these.
+
+A full summary can be found on the https://gatling.io/docs/gatling/reference/current/core/session/feeder/[feeder] page.
+
+But a basic one can be as easy as:
+[code, java]
+----
+Iterator<Map<String, Object>> feeder = Stream.generate((Supplier<Map<String, Object>>) () -> Collections.singletonMap("dieRoll", ThreadLocalRandom.current().nextInt(1, 7))).iterator();
+----
+
+We can then `feed(feeder)` which we call at the same place as `exec`. +
+Now each time a `Virtual User` reaches this step a value will be fetched from the `Feeder` and injected into the `Session`.
+
+==== Using data
+
+We can either programmatically get it with the Session API `session.get("dieRoll")` or using the Expression Language `"${dieRoll}"`
+
+*note*: the EL also has a lot of built-in functions, see for reference the https://gatling.io/docs/gatling/reference/current/core/session/el/[expression language] page
+
+
+
 == Notes
 * Gatling as a standalone bundle can be used for Scala and Java, for Kotlin you'll need a `Maven` or `Gradle` project.
-
 * Gatling requires Java 8 or higher
 
 == References

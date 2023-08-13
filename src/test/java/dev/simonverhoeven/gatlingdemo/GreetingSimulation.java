@@ -4,7 +4,10 @@ import io.gatling.javaapi.core.*;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 
 import java.time.Duration;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.http;
@@ -27,6 +30,11 @@ public class GreetingSimulation extends Simulation {
                     .check(status().is(200))
             );
 
+    public GreetingSimulation() {
+        this.setUp(sampleScenario.injectOpen(constantUsersPerSec(100).during(Duration.ofSeconds(60))))
+                .protocols(httpProtocol);
+    }
+
     ChainBuilder greeting = exec(http("get greeting")
             .get(session -> "/greet/" + UUID.randomUUID())
             .check(status().is(200))
@@ -40,8 +48,9 @@ public class GreetingSimulation extends Simulation {
 
     ScenarioBuilder sampleScenario2 = scenario("Load test greeting").exec(greeting, slowcall);
 
-    public GreetingSimulation() {
-        this.setUp(sampleScenario.injectOpen(constantUsersPerSec(100).during(Duration.ofSeconds(60))))
-                .protocols(httpProtocol);
-    }
+    ChainBuilder sessionStep = exec(session -> {
+        return session.set("someField", "value");
+    });
+
+    Iterator<Map<String, Object>> feeder = Stream.generate((Supplier<Map<String, Object>>) () -> Collections.singletonMap("dieRoll", ThreadLocalRandom.current().nextInt(1, 7))).iterator();
 }
