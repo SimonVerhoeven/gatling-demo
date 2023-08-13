@@ -126,12 +126,12 @@ After the run it will show us where we can find the simulation results
 
 === Using a build tool
 
-=== General configuration
+==== General configuration
 
 We can set up a `gatling.conf` file in `src\test\resources` to define global parameters such as the used encoding, SSL setup, shutdownTimeout, ... +
 To view a list of possible parameters, and their defaults you can visit https://github.com/gatling/gatling/blob/main/gatling-core/src/main/resources/gatling-defaults.conf[their github repository].
 
-==== Maven project
+===== Maven project
 
 We need to add:
 
@@ -155,7 +155,7 @@ We need to add:
 
 *note:* If your scenario was written/recorded as Scala you will need to use the `scala-maven-plugin`!
 
-=== Gradle project
+==== Gradle project
 
 There are a couple of things we need to keep in mind:
 
@@ -172,7 +172,7 @@ We'll need to add the following to our build file:
  }
 ----
 
-=== Execution
+==== Execution
 
 We can use then put the recording in the expected location, and execute `mvn gatling:test` or `gradle gatlingRun` to perform our simulation. +
 *note*: if you have multiple simulations you will either need to enable `runMultipleSimulations` in your configuration|commandline or specify the `simulationClass` in your configuration|commandline.
@@ -185,6 +185,8 @@ And we might end up with a report like this:
 image::raw/result.png[]
 
 == Diving a bit deeper
+
+This all was quite a basic setup, now of course when we want to do this kind of testing we generally want to configure a lot more.
 
 === Splitting up our scenario
 
@@ -223,8 +225,67 @@ ChainBuilder slowcall = exec(http("Randomly slow")
         .check(status().is(200))
 );
 
-ScenarioBuilder sampleScenario2 = scenario("Loead test greeting").exec(greeting, slowcall);
+ScenarioBuilder sampleScenario2 = scenario("Load test greeting").exec(greeting, slowcall);
 ----
+
+=== Configuring the protocol
+
+The beforehand shown protocol configuration is quite basic, but a lot more can be done with it.
+
+* customizing the url used to warm up the Java/NIO engine (or disable this warm up) using `warmUp(url)` and `disableWarmup()` respectively
+* configure the maximum number of connections per host `maxConnectionsPerHost(N)`
+* switch the behaviour from client => browser to behave more like server => server by using `shareConnections()`
+* configure host name aliasing `hostNameAliases(...)`
+* configure the virtual host `virtualHost(N)`
+* disable caching `disableCaching()`
+* ...
+
+For example:
+[code,java]
+----
+private HttpProtocolBuilder httpProtocol = http
+    .baseUrl("https://computer-database.gatling.io")
+    .acceptEncodingHeader("gzip, deflate, br")
+    .acceptLanguageHeader("en-GB,en;q=0.9,nl;q=0.8")
+    .disableCaching()
+    .upgradeInsecureRequestsHeader("1");
+----
+
+For a full list you can check:
+
+* https://gatling.io/docs/gatling/reference/current/http/protocol/[HTTP protocol documentation]
+* https://gatling.io/docs/gatling/reference/current/jms/#protocol[JMS protocol documentation]
+* https://gatling.io/docs/gatling/reference/current/mqtt/#mqtt-protocol[MQTT protocol documentation]
+
+=== User management
+
+Now in the sample recording we've made there's 1 user. That's nice to run through the flow, but that will (hopefully) not expose any performance issues in your project.
+
+Gatling supports 2 different workload models for users:
+
+* closed: we control the *concurrent* number of users
+* open: we control the *arrival rate* of users
+
+this API allows us to define things such as:
+
+* ramp up period
+* stress peak
+* constant number of users per second during a certain time
+* ...
+
+For example we could have this setup:
+[code,java]
+----
+sampleScenario.injectOpen(
+    nothingFor(20), // nothing for 20 seconds
+    atOnceUsers(100), // 100 users at once, once the click hits 9:00
+    rampUsers(50).during(60) // evenly add 50 users over 60 seconds as they sip their coffee
+)
+----
+
+This allows us to mimic behaviours like call centers/morning rush/...
+
+A full list of details can be found on the https://gatling.io/docs/gatling/reference/current/core/injection/[injection] page.
 
 == Notes
 * Gatling as a standalone bundle can be used for Scala and Java, for Kotlin you'll need a `Maven` or `Gradle` project.
@@ -233,4 +294,5 @@ ScenarioBuilder sampleScenario2 = scenario("Loead test greeting").exec(greeting,
 
 == References
 * https://gatling.io/[Gatling official website]
+* https://gatling.io/enterprise/[Gatling enterprise offering] - both self-hosted, and as cloud
 * https://computer-database.gatling.io/computers[Gatling sample application] - this application is provided by Gatling to be targeted by the recorder

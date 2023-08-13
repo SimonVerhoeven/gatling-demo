@@ -38,7 +38,7 @@ public class GreetingSimulation extends Simulation {
             .check(status().is(200))
     );
 
-    ScenarioBuilder sampleScenario2 = scenario("Loead test greeting").exec(greeting, slowcall);
+    ScenarioBuilder sampleScenario2 = scenario("Load test greeting").exec(greeting, slowcall);
 
     public GreetingSimulation() {
         this.setUp(sampleScenario.injectOpen(constantUsersPerSec(100).during(Duration.ofSeconds(60))))
