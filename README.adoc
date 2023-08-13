@@ -173,7 +173,8 @@ We'll need to add the following to our build file:
 
 === Execution
 
-We can use `mvn gatling:test` or `gradle gatlingRun` to perform our simulation.
+We can use then put the recording in the expected location, and execute `mvn gatling:test` or `gradle gatlingRun` to perform our simulation. +
+*note*: if you have multiple simulations you will either need to enable `runMultipleSimulations` in your configuration|commandline or specify the `simulationClass` in your configuration|commandline.
 
 During the execution Gatling will output the progress of the current Simulation to the console, and at the end of each Simulation a summary of it.
 
