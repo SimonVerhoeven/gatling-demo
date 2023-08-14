@@ -387,6 +387,6 @@ A full list can be found on the https://gatling.io/docs/gatling/reference/curren
 == References
 * https://gatling.io/[The official website]
 * https://gatling.io/docs/gatling/reference/current/extensions/[Extensions]
-* https://gatling.io/docs/gatling/reference/current/core/configuration/[Conguration options]
+* https://gatling.io/docs/gatling/reference/current/core/configuration/[Configuration options]
 * https://gatling.io/enterprise/[Gatling enterprise offering] - both self-hosted, and as cloud
 * https://computer-database.gatling.io/computers[Gatling sample application] - this application is provided by Gatling to be targeted by the recorder
