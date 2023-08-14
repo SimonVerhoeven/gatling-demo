@@ -345,14 +345,48 @@ We can either programmatically get it with the Session API `session.get("dieRoll
 
 *note*: the EL also has a lot of built-in functions, see for reference the https://gatling.io/docs/gatling/reference/current/core/session/el/[expression language] page
 
+== Validation
 
+Besides just gathering insights into the performance we might also want to do some validation.
+Within Gatling these are grouped within `Assertions` and `Checks`
+
+=== Assertions
+
+These are used to validate certain metrics and are defined on a given scope, for a certain static and are applied to your Simulation`
+
+Gatling has 3 scopes:
+
+* global: uses statistics calculated from all requests
+* forAll: statistics calculated for each individual request
+* details(path): statistics calculated from a group/request, defined like a Unix path
+
+For these 5 statistics:
+
+* response time
+* allRequests: number of requests
+* failedRequests
+* successfulRequests
+* requestsPerSec
+
+for which we can define certain conditions for a given metric.
+
+For example if we want to check that less than 1% of each request fails we can do:
+
+[code,java]
+----
+this.setUp(sampleScenario.injectOpen(constantUsersPerSec(100).during(Duration.ofSeconds(60))))
+    .assertions(forAll().failedRequests().percent().lte(1D))
+----
+
+A full list can be found on the https://gatling.io/docs/gatling/reference/current/core/assertions/[Assertions] page.
 
 == Notes
 * Gatling as a standalone bundle can be used for Scala and Java, for Kotlin you'll need a `Maven` or `Gradle` project.
 * Gatling requires Java 8 or higher
 
 == References
-* https://gatling.io/[Gatling official website]
-* https://gatling.io/docs/gatling/reference/current/extensions/[Gatling extensions]
+* https://gatling.io/[The official website]
+* https://gatling.io/docs/gatling/reference/current/extensions/[Extensions]
+* https://gatling.io/docs/gatling/reference/current/core/configuration/[Conguration options]
 * https://gatling.io/enterprise/[Gatling enterprise offering] - both self-hosted, and as cloud
 * https://computer-database.gatling.io/computers[Gatling sample application] - this application is provided by Gatling to be targeted by the recorder

@@ -32,6 +32,7 @@ public class GreetingSimulation extends Simulation {
 
     public GreetingSimulation() {
         this.setUp(sampleScenario.injectOpen(constantUsersPerSec(100).during(Duration.ofSeconds(60))))
+                .assertions(forAll().failedRequests().percent().lte(1D))
                 .protocols(httpProtocol);
     }
 
