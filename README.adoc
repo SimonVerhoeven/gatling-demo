@@ -287,6 +287,8 @@ This allows us to mimic behaviours like call centers/morning rush/...
 
 A full list of details can be found on the https://gatling.io/docs/gatling/reference/current/core/injection/[injection] page.
 
+*request*: if you're using Gatling's sample application, please keep in mind to not set your values to high as not to overload it.
+
 === Data setup
 
 For some realistic tests we of course want to set up some data, rather than the static data from the recorder.
@@ -351,5 +353,6 @@ We can either programmatically get it with the Session API `session.get("dieRoll
 
 == References
 * https://gatling.io/[Gatling official website]
+* https://gatling.io/docs/gatling/reference/current/extensions/[Gatling extensions]
 * https://gatling.io/enterprise/[Gatling enterprise offering] - both self-hosted, and as cloud
 * https://computer-database.gatling.io/computers[Gatling sample application] - this application is provided by Gatling to be targeted by the recorder
