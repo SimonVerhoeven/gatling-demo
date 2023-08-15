@@ -397,6 +397,41 @@ The API provides us a DSL to:
 * optionally *name* the check, to make it clearer in case the check fails
 * optionally *save* the result of the check on the Virtual User's `Session` for later reuse
 
+Let's say we want to verify we're actually starting our greeting with `Hello`, but want to be a tad louder about it, and store it on our Virtual User's `Session` for later reuse. +
+Then we could do something akin to:
+
+[code,java]
+----
+.check(
+    bodyString()
+        .transform(String::toUpperCase)
+        .validate("Contains HELLO validation", (value, session) -> {
+            if (value.startsWith("HELLO")) {
+                return value;
+            } else {
+                throw new IllegalStateException("Value " + value + " should start with HELLO");
+            }
+        })
+        .name("Greeting message check")
+        .saveAs("loudMessage")
+)
+----
+
+Here we're:
+
+. checking our body text
+. transforming it to be in uppercase
+. adding a validation on it with the recognizable name `Contains HELLO validation`
+. explicitly giving the check a clear name
+. saving it on our `Session` as `LoudMessage`
+
+Then in subsequent checks we can use this value:
+[code,java]
+----
+.checkIf(session -> session.getString("loudMessage") != null).then(status().not(404))
+----
+
+
 To learn more about Checks you can visit the https://gatling.io/docs/gatling/reference/current/core/check/[documentation].
 
 == Notes

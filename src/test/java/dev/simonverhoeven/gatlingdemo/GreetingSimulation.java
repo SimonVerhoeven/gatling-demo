@@ -54,4 +54,30 @@ public class GreetingSimulation extends Simulation {
     });
 
     Iterator<Map<String, Object>> feeder = Stream.generate((Supplier<Map<String, Object>>) () -> Collections.singletonMap("dieRoll", ThreadLocalRandom.current().nextInt(1, 7))).iterator();
+
+// The below code is to showcase a deeper usage of checks, to also validate data, and use it later on.
+//    ScenarioBuilder sampleScenario = scenario("Load Test greeting")
+//            .exec(http("get greeting")
+//                    .get(session -> "/greet/" + UUID.randomUUID())
+//                    .check(
+//                            status().is(200),
+//                            bodyString()
+//                                    .transform(String::toUpperCase)
+//                                    .validate("Contains HELLO validation", (value, session) -> {
+//                                        if (value.startsWith("HELLO")) {
+//                                            return value;
+//                                        } else {
+//                                            throw new IllegalStateException("Value " + value + " should start with HELLO");
+//                                        }
+//                                    })
+//                                    .name("Greeting message check")
+//                                    .saveAs("loudMessage")
+//                    )
+//            )
+//            .pause(5)
+//            .exec(http("Randomly slow")
+//                    .get("/slow")
+//                    .check(status().is(200))
+//                    .checkIf(session -> session.getString("loudMessage") != null).then(status().not(404))
+//            );
 }
