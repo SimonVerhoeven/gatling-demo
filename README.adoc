@@ -187,6 +187,7 @@ image::raw/result.png[]
 == Diving a bit deeper
 
 This all was quite a basic setup, now of course when we want to do this kind of testing we generally want to configure a lot more.
+If you want to follow along, please check out/download this repository and make sure you have Java and Maven installed.
 
 === Splitting up our scenario
 
@@ -378,7 +379,25 @@ this.setUp(sampleScenario.injectOpen(constantUsersPerSec(100).during(Duration.of
     .assertions(forAll().failedRequests().percent().lte(1D))
 ----
 
-A full list can be found on the https://gatling.io/docs/gatling/reference/current/core/assertions/[Assertions] page.
+A full list of possible assertions can be found on the https://gatling.io/docs/gatling/reference/current/core/assertions/[Assertions] page.
+
+=== Checks
+
+Checks are used to validate our requests, and as we've seen before to extract data and contribute it to the Virtual User's session for later reuse.
+
+We can use `check(status().is(200))`, or in a conditional manner using `checkIf(SOME_CONDITION).then(status().is(200))`
+
+The API provides us a DSL to:
+
+* define the *check type* (response type, body length, body bytes, ...)
+* *extract* data, if not explicitly defined Gatling will perform an implicit `find`
+* optionally *transform* the data (default if blank, append a (session) value, ...)
+* *validate* the check (is X, isNull, in, ...), if none is defined Gatling checks for `exists` by default
+** you can always use `.validate(...)` to provide your own validation logic
+* optionally *name* the check, to make it clearer in case the check fails
+* optionally *save* the result of the check on the Virtual User's `Session` for later reuse
+
+To learn more about Checks you can visit the https://gatling.io/docs/gatling/reference/current/core/check/[documentation].
 
 == Notes
 * Gatling as a standalone bundle can be used for Scala and Java, for Kotlin you'll need a `Maven` or `Gradle` project.
@@ -388,5 +407,6 @@ A full list can be found on the https://gatling.io/docs/gatling/reference/curren
 * https://gatling.io/[The official website]
 * https://gatling.io/docs/gatling/reference/current/extensions/[Extensions]
 * https://gatling.io/docs/gatling/reference/current/core/configuration/[Configuration options]
+* https://gatling.io/docs/gatling/reference/current/core/operations/[Operating system tuning]
 * https://gatling.io/enterprise/[Gatling enterprise offering] - both self-hosted, and as cloud
 * https://computer-database.gatling.io/computers[Gatling sample application] - this application is provided by Gatling to be targeted by the recorder
