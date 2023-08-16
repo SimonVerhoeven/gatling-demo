@@ -53,6 +53,17 @@ public class GreetingSimulation extends Simulation {
         return session.set("someField", "value");
     });
 
+    ChainBuilder inverseState = exec(session -> {
+        boolean failed = session.isFailed();
+        if (failed) {
+            session.markAsSucceeded();
+        } else {
+            session.markAsFailed();
+        }
+        exitHereIfFailed()
+        return session;
+    });
+
     Iterator<Map<String, Object>> feeder = Stream.generate((Supplier<Map<String, Object>>) () -> Collections.singletonMap("dieRoll", ThreadLocalRandom.current().nextInt(1, 7))).iterator();
 
 // The below code is to showcase a deeper usage of checks, to also validate data, and use it later on.

@@ -1,6 +1,7 @@
 = Gatling - demo
 :toc:
 :toc-placement:
+:toclevels: 3
 
 == What is Gatling?
 
@@ -346,6 +347,25 @@ We can either programmatically get it with the Session API `session.get("dieRoll
 
 *note*: the EL also has a lot of built-in functions, see for reference the https://gatling.io/docs/gatling/reference/current/core/session/el/[expression language] page
 
+=== User information
+
+Besides the data we manage ourselves, Gatling also provides us some useful information:
+
+* unique id of the virtual user: `session.userId()`
+* scenario the virtual user executes: `session.scenario()`
+* group(s) the virtual user is in: `session.groups()`
+
+=== Session state management
+
+Now generally one is also interested in the state of the `Session`, and in some cases altering it.
+
+We can determine whether it has failed using: `session.isFailed()`.
+
+Now in case we're making use of interrupt mechanisms offered by Gatling such as `exitHereIf(...)` or `exitHereIfFailed(...)` it might be useful to alter the state so they (do not) trigger.
+
+This can be achieved using `session.markAsSucceeded()` or `session.markAsFailed()`.
+
+
 == Validation
 
 Besides just gathering insights into the performance we might also want to do some validation.
@@ -430,7 +450,6 @@ Then in subsequent checks we can use this value:
 ----
 .checkIf(session -> session.getString("loudMessage") != null).then(status().not(404))
 ----
-
 
 To learn more about Checks you can visit the https://gatling.io/docs/gatling/reference/current/core/check/[documentation].
 
