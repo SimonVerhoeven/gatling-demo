@@ -185,6 +185,19 @@ And we might end up with a report like this:
 
 image::raw/result.png[]
 
+Which shows us:
+
+* response time distributed in ranges
+* summary of our requests
+* active users over time
+* response time distribution
+* response time percentiles over time
+* requests per second over time
+* responses per second over time
+* response time against global RPS when consulting a specific group
+
+*note*: a lot of the ranges/percentiles can be configured in `gatling.conf`
+
 == Diving a bit deeper
 
 This all was quite a basic setup, now of course when we want to do this kind of testing we generally want to configure a lot more.
