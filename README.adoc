@@ -3,6 +3,15 @@
 :toc-placement:
 :toclevels: 3
 
+== Load testing?
+
+Load testing entails testing how our application performs under a significant load so we can be certain it behaves as expected when there's an influx of users.
+Or at least so we know what it can cope it, and at what point we might potentially need to take action.
+
+After all, it might not (only) be the code that's the issue.
+
+This is a process that requires quite a bit of cooperation between testers, developers, and those using it to properly determine the scenarios, and a smooth & swift feedback loop is important to make sure our solutions work properly. And it will likely be some of the most expensive tests given both the people involved and the need for a testing environment that's representative of the production configuration.
+
 == What is Gatling?
 
 It is a performance load-testing tool that easily allows us to simulate traffic, and perform load testing as code, so we can integrate it with CI/CD and automation.
@@ -482,6 +491,7 @@ We can also achieve something akin using the free version with the following ste
 == Notes
 * Gatling as a standalone bundle can be used for Scala and Java, for Kotlin you'll need a `Maven` or `Gradle` project.
 * Gatling requires Java 8 or higher
+* there are other interesting tools such as Element, Selenium, and Apache JMeter
 
 == References
 * https://gatling.io/[The official website]
