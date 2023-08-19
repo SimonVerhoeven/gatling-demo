@@ -466,6 +466,19 @@ Then in subsequent checks, we can use this value:
 
 To learn more about Checks you can visit the https://gatling.io/docs/gatling/reference/current/core/check/[documentation].
 
+== Scaling
+
+Now we might want to test quite a big load, and our device might not quite be able to cope with this.
+
+Gatling Enterprise offers a clustering mode, which allows us to deploy injectors on different instances and perform live aggregation on the results.
+
+We can also achieve something akin using the free version with the following steps:
+
+* deploy our `Simulation` and its dependencies on multiple instances
+* trigger these all with the `-nr` (no reports flag) since we don't need individual reports
+* place all of the generated logfiles in the results folder of one of the instances
+* generate the reports using `-ro {reportFolderName}` (ro = reports only flag)
+
 == Notes
 * Gatling as a standalone bundle can be used for Scala and Java, for Kotlin you'll need a `Maven` or `Gradle` project.
 * Gatling requires Java 8 or higher
