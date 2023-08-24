@@ -485,8 +485,31 @@ We can also achieve something akin using the free version with the following ste
 
 * deploy our `Simulation` and its dependencies on multiple instances
 * trigger these all with the `-nr` (no reports flag) since we don't need individual reports
-* place all of the generated logfiles in the results folder of one of the instances
+* place all the generated logfiles in the results folder of one of the instances
 * generate the reports using `-ro {reportFolderName}` (ro = reports only flag)
+
+== Realtime monitoring
+
+By default, only Gatling provides live feedback in the console but there in case you're interested in a more visually appealing way you can use:
+
+. https://gatling.io/enterprise/[Gatling enterprise] which offers realtime monitoring
+. Graphite integration over the Graphite `plaintext` protocol, by adding `graphite` to the data writers, and specifying the host:
+
+[code,json]
+----
+gatling {
+  data {
+    writers = [console, file, graphite]
+
+    graphite {
+      host = "localhost"
+      port = 8086
+    }
+  }
+}
+----
+
+
 
 == Notes
 * Gatling as a standalone bundle can be used for Scala and Java, for Kotlin you'll need a `Maven` or `Gradle` project.
