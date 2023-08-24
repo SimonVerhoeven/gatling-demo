@@ -1,10 +1,15 @@
 package dev.simonverhoeven.gatlingdemo;
 
-import io.gatling.javaapi.core.*;
+import io.gatling.javaapi.core.ChainBuilder;
+import io.gatling.javaapi.core.ScenarioBuilder;
+import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -60,7 +65,6 @@ public class GreetingSimulation extends Simulation {
         } else {
             session.markAsFailed();
         }
-        exitHereIfFailed()
         return session;
     });
 
