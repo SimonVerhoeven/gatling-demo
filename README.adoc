@@ -67,8 +67,8 @@ ScenarioBuilder scenario = CoreDsl.scenario("Load Test greeting")
 ----
 
 The scenario that we'll be executing. +
-In this case, we're invoking the greeting call, verifying that it's returning OK, waiting 5 seconds, invoking another endpoint and checking that ones status.
-*note*: we are also giving out chain a label to make it easily identifiable in the output.
+In this case, we're invoking the greeting call, verifying that it's returning OK, waiting 5 seconds, invoking another endpoint, and checking the status of that one.
+*note*: We are also giving out chain a label to make it easily identifiable in the output.
 
 === 3) The simulation
 
@@ -194,7 +194,7 @@ And we might end up with a report like this:
 
 image::raw/result.png[]
 
-Which shows us:
+This shows us:
 
 * response time distributed in ranges
 * summary of our requests
@@ -292,7 +292,7 @@ Gatling supports 2 different workload models for users:
 
 this API allows us to define things such as:
 
-* ramp up period
+* ramp-up period
 * stress peak
 * constant number of users per second during a certain time
 * ...
@@ -311,7 +311,7 @@ This allows us to mimic behaviours like call centers/morning rush/...
 
 A full list of details can be found on the https://gatling.io/docs/gatling/reference/current/core/injection/[injection] page.
 
-*request*: if you're using Gatling's sample application, please keep in mind to not set your values to high as not to overload it.
+*request*: If you're using Gatling's sample application, please keep in mind to not set your values to high as not to overload it.
 
 === Data setup
 
