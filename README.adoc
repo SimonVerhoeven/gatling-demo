@@ -146,7 +146,7 @@ These follow a cascading order: `System properties => gatling.conf => gatling-de
 * system properties
 ** the name must match the name https://github.com/typesafehub/config/blob/master/HOCON.md#paths-as-keys[HOCON path]
 * gatling.conf
-** this must be places in src/test/resources for projects | conf if using the bundled version you can overwrite the
+** this must be placed in src/test/resources for projects | conf if using the bundled version you can overwrite the
 ** the filename can be overwritten using `-Dgatling.conf.file={filename}`, this is loaded from the classloader, not the filesystem
 ** the bundle distribution/demo projects contain  a `gatling.conf` file with all available properties commented with the default values
 * gatling.default.conf
@@ -225,7 +225,7 @@ If you want to follow along, please check out/download this repository and make 
 
 === Splitting up our scenario
 
-Now we have one big Simulation, now ideally we'd like to split this up so that we can reuse parts and make it more maintainable in case the application under test changes.
+Now we have one big Simulation, now preferably, we'd like to split this up so that we can reuse parts and make it more maintainable in case the application under test changes.
 
 We can achieve this by making use of `ChainBuilder`. Each portion would be a chain in our Scenario link.
 
