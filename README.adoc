@@ -3,7 +3,7 @@
 :toc-placement:
 :toclevels: 3
 
-== Load testing?
+== What is load testing?
 
 Load testing entails testing how our application performs under a significant load so we can be certain it behaves as expected when there's an influx of users.
 Or at least so we know what it can cope it, and at what point we might potentially need to take action.
