@@ -18,7 +18,7 @@ It is a performance load-testing tool that easily allows us to simulate traffic,
 
 We can make use of the https://gatling.io/docs/gatling/tutorials/quickstart/#using-the-recorder[Recorder] to record a scenario or write our own using the Java/Scala DSL.
 
-== Introduction
+== Getting started
 
 Gatling has a couple of core concepts we should know:
 
