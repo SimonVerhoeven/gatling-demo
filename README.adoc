@@ -123,7 +123,7 @@ And we'd end up with a recording akin to this link:raw/RecordedComputerSimulatio
 
 === Running the recording
 
-==== Using the commandline tool
+==== Using the command line tool
 
 We can run the recording by using `gatling.sh` or `gatling.bat` within `$GATLING_HOME/bin/`
 
