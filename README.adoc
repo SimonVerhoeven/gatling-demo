@@ -22,7 +22,7 @@ We can make use of the https://gatling.io/docs/gatling/tutorials/quickstart/#usi
 
 Gatling has a couple of core concepts we should know:
 
-* Virtual user: a dummy user implemented by Gatling as a message
+* Virtual user: a fake user implemented by Gatling as a message
 * Session: each virtual user has a Session that acts as a placeholder that can be used to inject, or capture & store data.
 * Scenario: the steps our virtual user has to perform
 * Simulation: the definition of the test such as the number of users, HTTP protocol, acceptance criteria, hooks, and throughput sharing, ...
@@ -35,7 +35,7 @@ Also, keep in mind that in Gatling the default unit for Duration parameters is 1
 
 == Basic setup
 
-Basic tests can consist of these three components
+Basic tests can consist of these three parts
 
 === 1) The protocol
 
@@ -48,7 +48,7 @@ final HttpProtocolBuilder httpProtocol = http
 ----
 
 This is the base configuration we'll be using for our API. +
-_note: Gatling also supports JMS & MQTT_
+_Note: Gatling also supports JMS & MQTT_
 
 === 2) The scenario
 
@@ -67,8 +67,8 @@ ScenarioBuilder scenario = CoreDsl.scenario("Load Test greeting")
 ----
 
 The scenario that we'll be executing. +
-In this case, we're invoking the greeting call, verifying that it's returning OK, waiting 5 seconds, invoking another endpoint, and checking the status of that one.
-*note*: We are also giving out chain a label to make it easily identifiable in the output.
+In this case, we're invoking the greeting call, verifying that it's returning OK, waiting 5 seconds, invoking another endpoint, and checking the status of that one. +
+*Note*: We are also giving our chain a label to make it easily identifiable in the output.
 
 === 3) The simulation
 
@@ -84,7 +84,7 @@ The simulation ties it all together. We set up our performance test for our give
 
 == Using the recorder
 
-Once you've downloaded the recorder https://gatling.io/open-source/[from the website] you can start the Gatling recorder using the `recorder.sh` or `recorder.bat` within `$GATLING_HOME/bin/`
+Once you've downloaded the recorder https://gatling.io/open-source/[from the website], you can start the Gatling recorder using the `recorder.sh` or `recorder.bat` within `$GATLING_HOME/bin/`
 
 For this example, we'll be making use of the https://computer-database.gatling.io/computers[Gatling sample application]
 
@@ -97,7 +97,7 @@ And we configure the following settings
 . proxy => HTTP proxy
 . package => our desired package name
 . class name => the simulation name
-. format => Java 17
+. format => Java 25
 . settings => we follow redirects, infer HTML resources, enable automatic references, and remove cache headers
 . deny list => we click no static resources
 
@@ -139,14 +139,14 @@ After the run, it will show us where we can find the simulation results
 ==== General configuration
 
 We can set up a `gatling.conf` file in `src\test\resources` to define global parameters such as the used encoding, SSL setup, shutdownTimeout, ... +
-To view a list of possible parameters, and their defaults you can visit https://github.com/gatling/gatling/blob/main/gatling-core/src/main/resources/gatling-defaults.conf[their github repository].
+To view a list of possible parameters, and their defaults you can visit https://github.com/gatling/gatling/blob/main/gatling-core/src/main/resources/gatling-defaults.conf[their GitHub repository].
 
 These follow a cascading order: `System properties => gatling.conf => gatling-defaults.conf`
 
 * system properties
 ** the name must match the name https://github.com/typesafehub/config/blob/master/HOCON.md#paths-as-keys[HOCON path]
 * gatling.conf
-** this must be placed in src/test/resources for projects | conf if using the bundled version you can overwrite the
+** this must be placed in src/test/resources for projects | conf if using the bundled version, you can overwrite the
 ** the filename can be overwritten using `-Dgatling.conf.file={filename}`, this is loaded from the classloader, not the filesystem
 ** the bundle distribution/demo projects contain  a `gatling.conf` file with all available properties commented with the default values
 * gatling.default.conf
@@ -162,7 +162,7 @@ We need to add:
   <dependency>
     <groupId>io.gatling.highcharts</groupId>
     <artifactId>gatling-charts-highcharts</artifactId>
-    <version>3.9.5</version>
+    <version>3.14.9</version>
     <scope>test</scope>
   </dependency>
 </dependencies>
@@ -170,7 +170,7 @@ We need to add:
 <plugin>
   <groupId>io.gatling</groupId>
   <artifactId>gatling-maven-plugin</artifactId>
-  <version>4.4.0</version>
+  <version>4.21.0</version>
 </plugin>
 ----
 
@@ -196,7 +196,7 @@ We'll need to add the following to our build file:
 ==== Execution
 
 We can use then put the recording in the expected location, and execute `mvn gatling:test` or `gradle gatlingRun` to perform our simulation. +
-*note*: if you have multiple simulations you will either need to enable `runMultipleSimulations` in your configuration|commandline or specify the `simulationClass` in your configuration|commandline.
+*Note*: if you have multiple simulations you will either need to enable `runMultipleSimulations` in your configuration|commandline or specify the `simulationClass` in your configuration|commandline.
 
 During the execution, Gatling will output the progress of the current Simulation to the console, and at the end of each Simulation a summary of it.
 
@@ -220,7 +220,7 @@ This shows us:
 
 == Diving a bit deeper
 
-This all was quite a basic setup, now of course when we want to do this kind of testing we generally want to configure a lot more.
+This all was quite a basic setup; now, of course, when we want to do this kind of testing, we generally want to configure a lot more.
 If you want to follow along, please check out/download this repository and make sure you have Java and Maven installed.
 
 === Splitting up our scenario
@@ -265,7 +265,7 @@ ScenarioBuilder sampleScenario2 = scenario("Load test greeting").exec(greeting, 
 
 === Configuring the protocol
 
-The beforehand shown protocol configuration is quite basic, but a lot more can be done with it.
+The beforehand-shown protocol configuration is quite basic, but a lot more can be done with it.
 
 * customizing the URL used to warm up the Java/NIO engine (or disable this warm-up) using `warmUp(url)` and `disableWarmup()` respectively
 * configure the maximum number of connections per host `maxConnectionsPerHost(N)`
@@ -294,9 +294,9 @@ For a full list, you can check:
 
 === User management
 
-Now in the sample recording we've made there's 1 user. That's nice to run through the flow, but that will (hopefully) not expose any performance issues in your project.
+Now in the sample recording we've made there's one user. That's nice to run through the flow, but that will (hopefully) not expose any performance issues in your project.
 
-Gatling supports 2 different workload models for users:
+Gatling supports two different workload models for users:
 
 * closed: we control the *concurrent* number of users
 * open: we control the *arrival rate* of users
@@ -327,13 +327,13 @@ A full list of details can be found on the https://gatling.io/docs/gatling/refer
 === Data setup
 
 For some realistic tests we of course want to set up some data, rather than the static data from the recorder.
-We will inject this data into our virtual users, and later retrieve it.
+We will inject this data into our virtual users and later retrieve it.
 
 ==== Setting data
 
 We have three options:
 
-1) by extracting it from responses, and saving it such as:
+1) by extracting it from responses and saving it such as:
 
 [code,java]
 ----
@@ -401,20 +401,20 @@ This can be achieved using `session.markAsSucceeded()` or `session.markAsFailed(
 
 == Validation
 
-Besides just gathering insights into the performance we might also want to do some validation.
+Besides just gathering insights into the performance, we might also want to do some validation.
 Within Gatling these are grouped within `Assertions` and `Checks`
 
 === Assertions
 
 These are used to validate certain metrics and are defined on a given scope, for a certain static and are applied to your Simulation`
 
-Gatling has 3 scopes:
+Gatling has three scopes:
 
 * global: uses statistics calculated from all requests
 * forAll: statistics calculated for each individual request
 * details(path): statistics calculated from a group/request, defined like a Unix path
 
-For these 5 statistics:
+For these five statistics:
 
 * response time
 * allRequests: number of requests
@@ -424,7 +424,7 @@ For these 5 statistics:
 
 for which we can define certain conditions for a given metric.
 
-For example, if we want to check that less than 1% of each request fails we can do:
+For example, if we want to check that less than 1% of each request fails, we can do:
 
 [code,java]
 ----
@@ -436,7 +436,7 @@ A full list of possible assertions can be found on the https://gatling.io/docs/g
 
 === Checks
 
-Checks are used to validate our requests, and as we've seen before to extract data and contribute it to the Virtual User's session for later reuse.
+Checks are used to validate our requests, and as we've seen before, to extract data and contribute it to the Virtual User's session for later reuse.
 
 We can use `check(status().is(200))`, or in a conditional manner using `checkIf(SOME_CONDITION).then(status().is(200))`
 
